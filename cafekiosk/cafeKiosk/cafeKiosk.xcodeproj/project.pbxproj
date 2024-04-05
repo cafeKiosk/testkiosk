@@ -13,7 +13,7 @@
 		627984472BBA614D00247F6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 627984452BBA614D00247F6D /* Main.storyboard */; };
 		627984492BBA614F00247F6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 627984482BBA614F00247F6D /* Assets.xcassets */; };
 		6279844C2BBA614F00247F6D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6279844A2BBA614F00247F6D /* LaunchScreen.storyboard */; };
-		627984762BBB9C1A00247F6D /* MenuData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627984752BBB9C1A00247F6D /* MenuData.swift */; };
+		627984762BBB9C1A00247F6D /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627984752BBB9C1A00247F6D /* Menu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +25,7 @@
 		627984482BBA614F00247F6D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6279844B2BBA614F00247F6D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6279844D2BBA614F00247F6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		627984752BBB9C1A00247F6D /* MenuData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuData.swift; sourceTree = "<group>"; };
+		627984752BBB9C1A00247F6D /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +65,7 @@
 				627984482BBA614F00247F6D /* Assets.xcassets */,
 				6279844A2BBA614F00247F6D /* LaunchScreen.storyboard */,
 				6279844D2BBA614F00247F6D /* Info.plist */,
-				627984752BBB9C1A00247F6D /* MenuData.swift */,
+				627984752BBB9C1A00247F6D /* Menu.swift */,
 			);
 			path = cafeKiosk;
 			sourceTree = "<group>";
@@ -141,7 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				627984762BBB9C1A00247F6D /* MenuData.swift in Sources */,
+				627984762BBB9C1A00247F6D /* Menu.swift in Sources */,
 				627984442BBA614D00247F6D /* ViewController.swift in Sources */,
 				627984402BBA614D00247F6D /* AppDelegate.swift in Sources */,
 				627984422BBA614D00247F6D /* SceneDelegate.swift in Sources */,

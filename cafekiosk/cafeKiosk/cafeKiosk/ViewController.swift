@@ -7,23 +7,22 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    @IBOutlet weak var categorySegmentControl: UISegmentedControl!
-    @IBOutlet weak var menuCollectionView: UICollectionView!
-    @IBOutlet weak var selectMenuTableView: UITableView!
-    @IBOutlet weak var totalSelectCount: UILabel!
-    @IBOutlet weak var totalSelectPrice: UILabel!
+final class ViewController: UIViewController {
+    @IBOutlet private weak var categorySegmentControl: UISegmentedControl!
+    @IBOutlet private weak var menuCollectionView: UICollectionView!
+    @IBOutlet private weak var selectMenuTableView: UITableView!
+    @IBOutlet private weak var totalSelectCount: UILabel!
+    @IBOutlet private weak var totalSelectPrice: UILabel!
     
-    var menuList: [MenuData] = []
-    var selectedMenuList: [MenuData] = []
-    var selectCount: Int = 0
-    var selectPrice: Int = 0
+    private var menuList = Menu.Coffee.allCases.map { $0.rawValue }
+    private var selectedMenuList = [String]()
+    private var selectCount: Int = 0
+    private var selectPrice: Int = 0
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        menuList = coffeeMenuList
         
         menuCollectionView.delegate = self
         menuCollectionView.dataSource = self
@@ -37,18 +36,18 @@ class ViewController: UIViewController {
     }
     
     //컬렉션뷰 여백
-    let sectionInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private let sectionInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     
     
     //  카테고리 탭 기능
-    @IBAction func tappedCategory(_ sender: UISegmentedControl) {
+    @IBAction private func tappedCategory(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-            menuList = coffeeMenuList
+            menuList = Menu.Coffee.allCases.map { $0.rawValue }
         case 1:
-            menuList = beverageMenuList
+            menuList = Menu.Beverage.allCases.map { $0.rawValue }
         case 2:
-            menuList = foodMenuList
+            menuList = Menu.Dessert.allCases.map { $0.rawValue }
         default:
             break
         }
@@ -56,7 +55,7 @@ class ViewController: UIViewController {
     }
     
     // 하단 버튼 alert (전체삭제버튼과 결제버튼에 테이블뷰를 비우는 작업 필요)
-    @IBAction func callButton(_ sender: Any) {
+    @IBAction private func callButton(_ sender: Any) {
         let alert1 = UIAlertController(title: "직원 호출", message: "직원을 호출하시겠습니까?", preferredStyle: .alert)
         let confirm1 = UIAlertAction(title: "예", style: .default)
         let cancel1 = UIAlertAction(title: "취소", style: .default)
@@ -66,7 +65,7 @@ class ViewController: UIViewController {
         present(alert1, animated: true)
     }
     
-    @IBAction func cancelButton(_ sender: Any) {
+    @IBAction private func cancelButton(_ sender: Any) {
         let alert2 = UIAlertController(title: "주문 전체 삭제", message: "주문을 모두 삭제하시겠습니까?", preferredStyle: .alert)
         let confirm2 = UIAlertAction(title: "예", style: .default, handler: { [self]_ in
             self.selectCount = 0
@@ -83,7 +82,7 @@ class ViewController: UIViewController {
         present(alert2, animated: true)
     }
     
-    @IBAction func payButton(_ sender: Any) {
+    @IBAction private func payButton(_ sender: Any) {
         let alert3 = UIAlertController(title: "결제", message: "결제 하시겠습니까?", preferredStyle: .alert)
         let confirm3 = UIAlertAction(title: "예", style: .default, handler: { [self]_ in
             self.selectCount = 0
@@ -102,7 +101,7 @@ class ViewController: UIViewController {
         present(alert3, animated: true)
     }
     
-    @IBAction func orderCheck() {
+    @IBAction private func orderCheck() {
         let orderTilt = "주문 완료"
         let orderMessage = "주문되었습니다!"
         
@@ -124,28 +123,40 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as! MenuCell
-        cell.backgroundColor = .systemGray6
-        cell.menuName.text = menuList[indexPath.row].name
-        cell.menuImage.image = menuList[indexPath.row].image
-        cell.menuPrice.text = menuList[indexPath.row].price
+        guard let cell = menuCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as? MenuCell else { return UICollectionViewCell() }
+        
+        let menuItem = menuList[indexPath.row]
+        cell.menuName.text = menuItem
+
+        if let coffee = Menu.Coffee(rawValue: menuItem) {
+            cell.menuPrice.text = "\(coffee.price)원"
+            cell.menuImage.image = coffee.image
+        } else if let beverage = Menu.Beverage(rawValue: menuItem) {
+            cell.menuPrice.text = "\(beverage.price)원"
+            cell.menuImage.image = beverage.image
+        } else if let dessert = Menu.Dessert(rawValue: menuItem) {
+            cell.menuPrice.text = "\(dessert.price)원"
+            cell.menuImage.image = dessert.image
+        }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedItem = menuList[indexPath.row]
         
-        if let existingItemIndex = selectedMenuList.firstIndex(where: { $0.name == selectedItem.name }) {
-            selectedMenuList[existingItemIndex].count += 1
-            
-            //print(selectedMenuList[existingItemIndex].count)
-        } else {
-            selectedMenuList.append(selectedItem)
+        if !selectedMenuList.contains(menuList[indexPath.row]) {
+            selectedMenuList.append(menuList[indexPath.row])
         }
         
         selectCount += 1
-        selectPrice += Int(selectedItem.price)!
+        
+        if let coffee = Menu.Coffee(rawValue: menuList[indexPath.row]) {
+            selectPrice += coffee.price
+        } else if let beverage = Menu.Beverage(rawValue: menuList[indexPath.row]) {
+            selectPrice += beverage.price
+        } else if let dessert = Menu.Dessert(rawValue: menuList[indexPath.row]) {
+            selectPrice += dessert.price
+        }
         
         totalSelectCount.text = String(selectCount)
         totalSelectPrice.text = String(selectPrice)
@@ -188,9 +199,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = selectMenuTableView.dequeueReusableCell(withIdentifier: "SelectedCell", for: indexPath) as! SelectedCell
-        cell.selectImage.image = selectedMenuList[indexPath.row].image
-        cell.selectMenuName.text = selectedMenuList[indexPath.row].name
+        guard let cell = selectMenuTableView.dequeueReusableCell(withIdentifier: "SelectedCell", for: indexPath) as? SelectedCell else { return UITableViewCell() }
+        
+        let menuItem = selectedMenuList[indexPath.row]
+
+        if let coffee = Menu.Coffee(rawValue: menuItem) {
+            cell.selectMenuName.text = coffee.rawValue
+            cell.selectImage.image = coffee.image
+        } else if let beverage = Menu.Beverage(rawValue: menuItem) {
+            cell.selectMenuName.text = beverage.rawValue
+            cell.selectImage.image = beverage.image
+        } else if let dessert = Menu.Dessert(rawValue: menuItem) {
+            cell.selectMenuName.text = dessert.rawValue
+            cell.selectImage.image = dessert.image
+        }
         //희라 : 중복된거 수정하실때 이부분에 cell.selectMenuCount.text 카운트 더해지도록하면될거같아요
         
         return cell
@@ -199,7 +221,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 
 
-class MenuCell: UICollectionViewCell {
+final class MenuCell: UICollectionViewCell {
     @IBOutlet weak var menuName: UILabel!
     @IBOutlet weak var menuPrice: UILabel!
     @IBOutlet weak var menuImage: UIImageView!
@@ -207,7 +229,7 @@ class MenuCell: UICollectionViewCell {
 
 
 
-class SelectedCell: UITableViewCell {
+final class SelectedCell: UITableViewCell {
     @IBOutlet weak var selectImage: UIImageView!
     @IBOutlet weak var selectMenuName: UILabel!
     

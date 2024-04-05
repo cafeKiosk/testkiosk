@@ -118,13 +118,19 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedMenuList.append(menuList[indexPath.row])
-        selectCount += 1
-        selectPrice += Int(menuList[indexPath.row].price)!
+        let selectedItem = menuList[indexPath.row]
         
-        print("\(indexPath.row)선택됨")
-        print(selectedMenuList)
-        print(selectCount)
+        if let existingItemIndex = selectedMenuList.firstIndex(where: { $0.name == selectedItem.name }) {
+            selectedMenuList[existingItemIndex].count += 1
+            
+            //print(selectedMenuList[existingItemIndex].count)
+        } else {
+            selectedMenuList.append(selectedItem)
+        }
+        
+        selectCount += 1
+        selectPrice += Int(selectedItem.price)!
+        
         totalSelectCount.text = String(selectCount)
         totalSelectPrice.text = String(selectPrice)
         
@@ -145,32 +151,22 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return sectionInsets
     }
+    
     //좌우간격 최소값
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
     }
-    
 }
 
-
-
-class MenuCell: UICollectionViewCell {
-
-    @IBOutlet weak var menuName: UILabel!
-    @IBOutlet weak var menuPrice: UILabel!
-    @IBOutlet weak var menuImage: UIImageView!
-    
-}
 
 
 
 // 선택된 메뉴를 테이블뷰 데이터 전달
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedMenuList.count
     }
@@ -180,17 +176,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.selectImage.image = selectedMenuList[indexPath.row].image
         cell.selectMenuName.text = selectedMenuList[indexPath.row].name
         //희라 : 중복된거 수정하실때 이부분에 cell.selectMenuCount.text 카운트 더해지도록하면될거같아요
+        
         return cell
-        
-        
     }
-    
-    
-    
 }
 
+
+
+class MenuCell: UICollectionViewCell {
+    @IBOutlet weak var menuName: UILabel!
+    @IBOutlet weak var menuPrice: UILabel!
+    @IBOutlet weak var menuImage: UIImageView!
+}
+
+
+
 class SelectedCell: UITableViewCell {
-    
     @IBOutlet weak var selectImage: UIImageView!
     @IBOutlet weak var selectMenuName: UILabel!
     

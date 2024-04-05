@@ -3,20 +3,22 @@
 //  cafeKiosk
 //
 //  Created by 문기웅 on 4/2/24.
-//
+// 
 
 import Foundation
 import UIKit
 
-struct MenuData {
-    let name: String
-    let price: String
+class MenuData {
+    var name: String
+    var price: String
     var image: UIImage
+    var count: Int
     
     init(name: String, price: String, image: UIImage) {
         self.name = name
         self.price = price
         self.image = image
+        self.count = 1
     }
 }
 
@@ -40,3 +42,4 @@ let pecanPie = MenuData(name: "피칸파이", price: "5500", image: UIImage(name
 let cheeseCake = MenuData(name: "바스크 치즈케이크", price: "5500", image: UIImage(named: "cheeseCake")!)
 
 var foodMenuList: [MenuData] = [chocoCake,pecanPie,cheeseCake]
+

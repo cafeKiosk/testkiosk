@@ -92,12 +92,28 @@ class ViewController: UIViewController {
             self.totalSelectPrice.text = String(selectPrice)
             self.selectedMenuList.removeAll()
             selectMenuTableView.reloadData()
+
+            orderCheck()                                                                 
         })
         let cancel3 = UIAlertAction(title: "취소", style: .default)
         
         alert3.addAction(confirm3)
         alert3.addAction(cancel3)
         present(alert3, animated: true)
+    }
+    
+    @IBAction func orderCheck() {
+        let orderTilt = "주문 완료"
+        let orderMessage = "주문되었습니다!"
+        
+        let alert = UIAlertController(title: orderTilt, message: orderMessage, preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+        }
+        
+        alert.addAction(confirmAction)
+        
+        present(alert, animated: true, completion: nil)
     }
 }
 
